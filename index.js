@@ -1,8 +1,18 @@
 const { sync: glob } = require("fast-glob");
 const path = require("path");
+const fs = require('fs');
 
-module.exports = (tsconfigPath = './tsconfig.json') => {
-  const { compilerOptions } = require(path.resolve(process.cwd(), tsconfigPath));
+function stripJsonComments (data) {
+  const re = new RegExp("\/\/(.*)","g");
+  return data.replace(re,'');
+}
+
+module.exports = (relativeTsconfigPath = './tsconfig.json') => {
+  const absTsconfigPath = path.resolve(process.cwd(), relativeTsconfigPath);
+  let tsconfigData = fs.readFileSync(absTsconfigPath, 'utf8');
+  tsconfigData = stripJsonComments(tsconfigData);
+  const {compilerOptions} = JSON.parse(tsconfigData);
+
   const pathKeys = Object.keys(compilerOptions.paths);
   const re = new RegExp(`^(${pathKeys.join("|")})`);
   return {
