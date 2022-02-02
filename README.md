@@ -1,6 +1,7 @@
 # esbuild-ts-paths
 Transform TS path alias to absolute paths for esbuild
-###Example
+
+### Example
 ```javascript
 // tsconfig.json
 
