@@ -23,7 +23,12 @@ module.exports = (relativeTsconfigPath = './tsconfig.json') => {
         const [pathDir] = pathKey.split("*");
         const file = args.path.replace(pathDir, "");
         for (const dir of compilerOptions.paths[pathKey]) {
-          const [matchedFile] = glob(`${path.resolve(process.cwd(), dir).replace("*", file)}.*`);
+          const fileDir = path.resolve(process.cwd(), dir).replace("*", file)
+          let [matchedFile] = glob(`${fileDir}.*`);
+          if (!matchedFile) {
+            const [matchIndexFile] = glob(`${fileDir}/index.*`);
+            matchedFile = matchIndexFile
+          }
           if (matchedFile) {
             return { path: matchedFile };
           }
