@@ -3,8 +3,7 @@ const path = require("path");
 const fs = require('fs');
 
 function stripJsonComments (data) {
-  const re = new RegExp("\/\/(.*)","g");
-  return data.replace(re,'');
+  return data.replace(/\\"|"(?:\\"|[^"])*"|(\/\/.*|\/\*[\s\S]*?\*\/)/g, (m, g) => g ? "" : m);
 }
 
 module.exports = (relativeTsconfigPath = './tsconfig.json') => {
