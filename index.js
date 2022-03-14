@@ -1,6 +1,7 @@
 const { sync: glob } = require("fast-glob");
 const path = require("path");
 const fs = require("fs");
+const normalizePath = process.platform === "win32" ? require("normalize-path") : (x) => x;
 
 function stripJsonComments(data) {
   return data.replace(/\\"|"(?:\\"|[^"])*"|(\/\/.*|\/\*[\s\S]*?\*\/)/g, (m, g) => (g ? "" : m));
@@ -22,7 +23,7 @@ module.exports = (relativeTsconfigPath = "./tsconfig.json") => {
         const [pathDir] = pathKey.split("*");
         const file = args.path.replace(pathDir, "");
         for (const dir of compilerOptions.paths[pathKey]) {
-          const fileDir = path.resolve(process.cwd(), dir).replace("*", file);
+          const fileDir = normalizePath(path.resolve(process.cwd(), dir).replace("*", file));
           let [matchedFile] = glob(`${fileDir}.*`);
           if (!matchedFile) {
             const [matchIndexFile] = glob(`${fileDir}/index.*`);
