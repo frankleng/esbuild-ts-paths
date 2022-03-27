@@ -22,8 +22,9 @@ module.exports = (relativeTsconfigPath = "./tsconfig.json") => {
         const pathKey = pathKeys.find((pkey) => new RegExp(`^${pkey}`).test(args.path));
         const [pathDir] = pathKey.split("*");
         let file = args.path.replace(pathDir, "");
-        if (file === args.path) { // if importing from root of alias
-          file = ""
+        if (file === args.path) {
+          // if importing from root of alias
+          file = "";
         }
         for (const dir of compilerOptions.paths[pathKey]) {
           const fileDir = normalizePath(path.resolve(process.cwd(), dir).replace("*", file));
